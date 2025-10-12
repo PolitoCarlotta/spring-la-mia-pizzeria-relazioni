@@ -1,20 +1,27 @@
 package com.pizzeria.spring_la_mia_pizzeria_crud.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pizzeria.spring_la_mia_pizzeria_crud.model.Pizza;
 import com.pizzeria.spring_la_mia_pizzeria_crud.repository.PizzaRepository;
 
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
@@ -48,6 +55,30 @@ public class PizzaController {
         }
         return "/pizze/show";
         
+    }
+
+        @GetMapping("/create")
+    public String create(Model model) {
+        model.addAttribute("pizza", new Pizza());
+
+        return "/pizze/create";
+    }
+
+    @PostMapping("/create")
+    public String save(@Valid @ModelAttribute("pizza") Pizza formPizza, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes, Model model) {
+        Optional<Pizza> optPizza = repository.findByName(formPizza.getName());
+        if (optPizza.isPresent()) {
+            bindingResult.addError(new ObjectError("name", "Name already present"));
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "/pizze/create";
+        }
+
+        repository.save(formPizza);
+        redirectAttributes.addFlashAttribute("successMessage", "Pizza created successifully");
+        return "redirect:/pizze";
     }
     
 }
