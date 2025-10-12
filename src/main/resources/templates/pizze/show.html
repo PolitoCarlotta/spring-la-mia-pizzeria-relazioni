@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}" />
+
+
+    <title th:text="${pizza != null} ? ${pizza.name} : 'Pizza not found'"></title>
+</head>
+
+
+<body>
+    <nav th:replace="~{navbar :: navbar('Pizze')}"></nav>
+
+    <div class="container text-center" th:object="${pizza}" th:unless="${empty}">
+        <h1 class="mt-4" th:text="*{name}"></h1>
+        <div class="row justify-content-center">
+            <img th:src="*{photo}" alt="" style="width: 300px;">
+        </div>
+        <hr />
+        <div class="row justify-content-center">
+            <div class="col">
+                <dl>
+                    <dt>Descrizione</dt>
+                    <dd th:text="*{note}"></dd>
+                    <dt>Prezzo</dt>
+                    <dd th:text="${#numbers.formatDecimal(pizza.price, 1, 2) + ' €'}"></dd>
+                </dl>
+            </div>            
+        </div>
+    </div>
+
+    <div class="container" th:if="${empty}">
+        <h1>Pizza not found</h1>
+    </div>
+
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.bundle.min.js}"></script>
+</body>
+
+</html>
