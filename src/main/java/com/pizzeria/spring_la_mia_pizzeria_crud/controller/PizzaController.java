@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -81,4 +82,41 @@ public class PizzaController {
         return "redirect:/pizze";
     }
     
+     @GetMapping("/edit/{id}")
+    public String edit(@PathVariable("id") Integer id, Model model) {
+        Optional<Pizza> optPizza = repository.findById(id);
+        Pizza pizza = optPizza.get();
+        model.addAttribute("pizza", pizza);
+
+        return "/pizze/edit";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String update(@Valid @ModelAttribute("pizza") Pizza formPizza, BindingResult bindingResult,
+            Model model) {
+
+        Pizza oldPizza = repository.findById(formPizza.getId()).get();
+
+        if (!oldPizza.getName().equals(formPizza.getName())) {
+            bindingResult.addError(new FieldError("pizza","name", "Cannot change the name of pizza!"));
+        }
+
+
+        if (bindingResult.hasErrors()) {
+            return "/pizze/edit";
+        }
+
+        repository.save(formPizza);
+
+        return "redirect:/pizze";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Integer id) {
+        Pizza pizza = repository.findById(id).get();
+
+        repository.deleteById(id);
+
+        return "redirect:/pizze";
+    }
 }
