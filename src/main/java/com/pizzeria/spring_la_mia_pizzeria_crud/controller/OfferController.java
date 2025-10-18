@@ -33,7 +33,7 @@ public class OfferController {
         return "redirect:/pizze/show/" + offer.getPizza().getId();
     }
 
-    @GetMapping("edit/{id}")
+    @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model) {
         Offer offer = repository.findById(id).get();
         model.addAttribute("editMode", true);
