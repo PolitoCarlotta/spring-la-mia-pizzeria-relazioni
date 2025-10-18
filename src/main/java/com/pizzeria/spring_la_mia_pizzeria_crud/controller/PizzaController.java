@@ -12,6 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.pizzeria.spring_la_mia_pizzeria_crud.model.Offer;
 import com.pizzeria.spring_la_mia_pizzeria_crud.model.Pizza;
 import com.pizzeria.spring_la_mia_pizzeria_crud.repository.PizzaRepository;
 
@@ -118,5 +119,15 @@ public class PizzaController {
         repository.deleteById(id);
 
         return "redirect:/pizze";
+    }
+
+    @GetMapping("/{id}/offer")
+    public String offer(@PathVariable("id") Integer id, Model model) {
+        Offer offer = new Offer();
+        offer.setPizza(repository.findById(id).get());
+
+        model.addAttribute("offer", offer);
+        model.addAttribute("editMode", false);
+        return "/offers/edit";
     }
 }
