@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}" />
+
+
+    <title>Ingredients</title>
+</head>
+
+
+<body>
+    <nav th:replace="~{navbar :: navbar('Ingredients')}"></nav>
+
+    <div class="container">
+        <div class="content">
+            <h1>Ingredients</h1>
+            <hr>
+            <div class="row">
+                <div class="col-4">
+                    <form id="ingredient-form" th:action="@{/ingredients/create}" method="post" th:object="${ingredientObj}">
+                        <div class="input-group mb-3">
+                            <input type="text" name="ingredient" id="ingredient" th:field="*{name}" class="form-control" th:errorClass="invalid-feedback">
+                              <div th:if="${#fields.hasErrors('name')}" class="invalid-feedback">
+                                    <ul>
+                                        <li th:each="err : ${#fields.errors('name')}" th:text="${err}"></li>
+                                    </ul>
+                                </div>
+                                <button class="btn btn-success" type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                    </svg>
+                                    Add
+                                </button>
+                        </div>
+                    </form>
+
+                    <ul class="list-group"th:if="${list.size() >0 }">
+                        <li class="list-group-item d-flex justify-content-between" th:each="item : ${list}">
+                            <span th:text="${item.name}"></span>
+                            <span th:text="|Pizze associate: ${item.pizze.size()}|"></span>
+                            <form th:action="@{|/ingredients/delete/${item.id}|}" method="post">
+                                <button class="btn btn-danger" type="submit" id="deleteButton" onclick="return confirm('Do you want delete?')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash2" viewBox="0 0 16 16">
+                                    <path d="M14 3a.7.7 0 0 1-.037.225l-1.684 10.104A2 2 0 0 1 10.305 15H5.694a2 2 0 0 1-1.973-1.671L2.037 3.225A.7.7 0 0 1 2 3c0-1.105 2.686-2 6-2s6 .895 6 2M3.215 4.207l1.493 8.957a1 1 0 0 0 .986.836h4.612a1 1 0 0 0 .986-.836l1.493-8.957C11.69 4.689 9.954 5 8 5s-3.69-.311-4.785-.793"/>
+                                    </svg>
+                                </button>
+                            </form>
+
+                        </li>
+                    </ul>
+
+                    <div class="alert alert-primary" role="alert" th:unless="${list.size() > 0}" >
+                        There are no ingredients in database
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.bundle.min.js}"></script>
+</body>
+
+</html>

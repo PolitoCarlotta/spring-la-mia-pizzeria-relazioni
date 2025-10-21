@@ -33,9 +33,9 @@
                 </dl>
             </div> 
             <div class="col-4">
-                <h3>Offers</h3>
+                <h3>Ingredients</h3>
                 <ul>
-                    <li>
+                    <li th:each="ingr : *{ingredients}" th:text="${ingr.name}">
                     </li>
                 </ul>
             </div>           

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pizzeria.spring_la_mia_pizzeria_crud.model.Offer;
 import com.pizzeria.spring_la_mia_pizzeria_crud.model.Pizza;
+import com.pizzeria.spring_la_mia_pizzeria_crud.repository.IngredientRepository;
 import com.pizzeria.spring_la_mia_pizzeria_crud.repository.OfferRepository;
 import com.pizzeria.spring_la_mia_pizzeria_crud.repository.PizzaRepository;
 
@@ -36,6 +37,9 @@ public class PizzaController {
 
     @Autowired
     private OfferRepository offerRepository;
+
+    @Autowired
+    private IngredientRepository ingredientRepository;
 
     @GetMapping
     public String index(Model model, @RequestParam (name= "keyword", required = false)String keyword) {
@@ -65,7 +69,9 @@ public class PizzaController {
 
         @GetMapping("/create")
     public String create(Model model) {
+        model.addAttribute("ingredientList", ingredientRepository.findAll());
         model.addAttribute("pizza", new Pizza());
+
 
         return "/pizze/create";
     }
@@ -79,6 +85,7 @@ public class PizzaController {
         }
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("ingredientList", ingredientRepository.findAll());
             return "/pizze/create";
         }
 
@@ -91,7 +98,9 @@ public class PizzaController {
     public String edit(@PathVariable("id") Integer id, Model model) {
         Optional<Pizza> optPizza = repository.findById(id);
         Pizza pizza = optPizza.get();
+        model.addAttribute("ingredientList", ingredientRepository.findAll());
         model.addAttribute("pizza", pizza);
+        
 
         return "/pizze/edit";
     }
@@ -108,6 +117,7 @@ public class PizzaController {
 
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("ingredientList", ingredientRepository.findAll());
             return "/pizze/edit";
         }
 
